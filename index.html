@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Laboratorio Dental</title>
+    <meta name="description" content="Catálogo profesional de servicios de laboratorio dental">
+    <meta name="theme-color" content="#0b0e11">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b0e11;
+            --card-bg: #15191e;
+            --accent-color: #00a8ff;
+            --text-main: #ffffff;
+            --whatsapp-green: #25d366;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+
+        /* NAVBAR */
+        .navbar { position: fixed; top: 0; width: 100%; background: rgba(11, 14, 17, 0.95); z-index: 1000; padding: 15px 0; border-bottom: 1px solid #222; }
+        .navbar-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .navbar-logo { font-weight: 800; font-size: 1.2rem; }
+        .navbar-menu { display: flex; gap: 20px; }
+        .nav-link { color: var(--text-main); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-link:hover { color: var(--accent-color); }
+
+        /* HEADER SLIDER */
+        header { 
+            height: 65vh; 
+            position: relative; 
+            overflow: hidden; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center;
+            background-color: #000;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            z-index: 1;
+        }
+
+        .slide.active { opacity: 1; }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(11,14,17,1));
+            z-index: 2;
+        }
+
+        .header-content { position: relative; z-index: 3; padding: 0 20px; }
+        header h1 { font-size: 3.5rem; font-weight: 800; text-shadow: 2px 2px 20px rgba(0,0,0,0.9); margin-bottom: 10px; }
+        header p { color: var(--accent-color); font-size: 1.2rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+
+        /* SECCIÓN DESTACADOS */
+        .destacados-section { padding: 60px 20px; max-width: 1200px; margin: 0 auto; }
+        .destacados-section h2 { text-align: center; margin-bottom: 30px; font-weight: 800; }
+        .destacados-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .destacado-card { background: var(--card-bg); padding: 25px; border-radius: 15px; border: 1px solid #2a2a2a; text-align: center; position: relative; }
+        .badge-destacado { position: absolute; top: 15px; right: 15px; background: var(--accent-color); font-size: 0.7rem; font-weight: 800; padding: 3px 10px; border-radius: 50px; }
+        .price-tag { display: block; margin-top: 10px; font-size: 1.4rem; font-weight: 700; color: var(--accent-color); }
+
+        /* GRID CATÁLOGO */
+        .grid-catalogo { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
+        .cuadro { background: var(--card-bg); border-radius: 12px; overflow: hidden; position: relative; border: 1px solid #222; transition: 0.3s; }
+        .cuadro:hover { transform: translateY(-5px); border-color: #444; }
+        .precio { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.85); padding: 4px 10px; border-radius: 6px; font-weight: 700; z-index: 10; font-size: 0.85rem; color: #00ff88; border: 1px solid #00ff8833; }
+        .imagen { width: 100%; height: 200px; overflow: hidden; cursor: pointer; }
+        .imagen img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .cuadro:hover img { transform: scale(1.1); }
+        .nombre { padding: 15px; text-align: center; min-height: 80px; display: flex; align-items: center; justify-content: center; }
+        .nombre h3 { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* FOOTER */
+        footer { padding: 40px 20px; text-align: center; background: #0e1217; border-top: 1px solid #222; margin-top: 50px; }
+
+        /* WHATSAPP FLOTANTE */
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: var(--whatsapp-green);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 2000;
+            transition: 0.3s;
+            animation: pulse-green 2s infinite;
+        }
+
+        /* MODAL */
+        .modal-3d { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 3000; padding: 20px; }
+        .modal-3d.active { display: flex; }
+        .modal-3d-content { position: relative; max-width: 700px; width: 100%; text-align: center; }
+        .modal-3d-image { width: 100%; border-radius: 8px; max-height: 80vh; object-fit: contain; }
+        .modal-3d-close { position: absolute; top: -40px; right: 0; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.2rem; }
+            .navbar-menu { display: none; }
+            header { height: 50vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">🦷 LABORATORIO DENTAL</div>
+            <div class="navbar-menu">
+                <a href="#home" class="nav-link">Inicio</a>
+                <a href="#catalogo" class="nav-link">Servicios</a>
+                <a href="#contacto" class="nav-link">Contacto</a>
+            </div>
+        </div>
+    </nav>
+
+    <header id="home">
+        <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80')"></div>
+        <div class="slide" style="background-image: url('img/protesis-de-zirconio-sobre-implantes.webp')"></div>
+        <div class="slide" style="background-image: url('img/CORONAS DE IVOCRON.png')"></div>
+        <div class="slide" style="background-image: url('img/CORONAS DE ZIRCONIO.jpg')"></div>
+        <div class="slide" style="background-image: url('img/CORONAS CON HOMBRO CERAMICOE.jpg')"></div>
+        <div class="slide" style="background-image: url('img/corona-de-porcelana.jpg')"></div>
+        
+        <div class="header-content">
+            <h1>Servicios Dentales</h1>
+            <p>Calidad y Precisión en cada Prótesis</p>
+        </div>
+    </header>
+
+    <section class="destacados-section">
+        <h2>Servicios Destacados</h2>
+        <div class="destacados-grid">
+            <div class="destacado-card">
+                <div class="badge-destacado">TOP</div>
+                <h3>Coronas de Zirconio</h3>
+                <span class="price-tag">S/. 400</span>
+            </div>
+            <div class="destacado-card">
+                <div class="badge-destacado">TOP</div>
+                <h3>Prótesis Flexible</h3>
+                <span class="price-tag">S/. 400</span>
+            </div>
+            <div class="destacado-card">
+                <div class="badge-destacado">BEST</div>
+                <h3>Corona de Implante</h3>
+                <span class="price-tag">S/. 200</span>
+            </div>
+        </div>
+    </section>
+
+    <div id="catalogo" class="grid-catalogo">
+        <div class="cuadro">
+            <span class="precio">S/. 400</span>
+            <div class="imagen"><img src="img/WhatsApp Image 2026-02-20 at 8.34.52 PM.jpeg" alt="Base Metálica"></div>
+            <div class="nombre"><h3>BASE METALICA CON ACRILICO TRIPLEX</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 400</span>
+            <div class="imagen"><img src="img/protesis-flexibles.jpg" alt="Prótesis Flexible"></div>
+            <div class="nombre"><h3>PROTESIS FLEXIBLE</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 250</span>
+            <div class="imagen"><img src="img/protesis-total-590x350-malla.jpg" alt="Prótesis Total Malla"></div>
+            <div class="nombre"><h3>PROTESIS TOTAL CON MALLA</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 400</span>
+            <div class="imagen"><img src="img/PROTESIS TOTAL .jpeg" alt="Prótesis Total Triplex"></div>
+            <div class="nombre"><h3>PROTESIS TOTAL + TRIPLEX</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 180</span>
+            <div class="imagen"><img src="img/WIPLA.jpeg" alt="Prótesis Wipla"></div>
+            <div class="nombre"><h3>PROTESIS PARCIAL CON WIPLA</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 10</span>
+            <div class="imagen"><img src="img/CUBETA.jpg" alt="Cubeta Individual"></div>
+            <div class="nombre"><h3>CUBETA INDIVIDUAL</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 300</span>
+            <div class="imagen"><img src="img/MANTENEDOR DE ESPACIO.jpg" alt="Mantenedor de Espacio"></div>
+            <div class="nombre"><h3>MANTENEDOR DE ESPACIO</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 400</span>
+            <div class="imagen"><img src="img/CORONAS DE ZIRCONIO.jpg" alt="Coronas Zirconio"></div>
+            <div class="nombre"><h3>CORONAS DE ZIRCONIO</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 200</span>
+            <div class="imagen"><img src="img/implantes-con-coronas-1.jpg" alt="Corona de Implante"></div>
+            <div class="nombre"><h3>CORONA DE IMPLANTE</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 50</span>
+            <div class="imagen"><img src="img/CORONAS PROVISIONALES DE ACRÍLICO DE TERMO CURABLE.webp" alt="Coronas Provisionales"></div>
+            <div class="nombre"><h3>CORONAS PROVISIONALES TERMO CURABLE</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 30</span>
+            <div class="imagen"><img src="img/CORONAS PROVISIONALES ACRÍLICO AUTOCURABLE33.jpg" alt="Provisionales Autocurables"></div>
+            <div class="nombre"><h3>CORONAS PROVISIONALES AUTOCURABLE</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 250</span>
+            <div class="imagen"><img src="img/ORTODONCIA JAIRACK.jpeg" alt="Ortodoncia Jairack"></div>
+            <div class="nombre"><h3>ORTODONCIA JAIRACK</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 150</span>
+            <div class="imagen"><img src="img/CORONAS CON HOMBRO CERAMICOE.jpg" alt="Hombro Cerámico"></div>
+            <div class="nombre"><h3>CORONAS CON HOMBRO CERAMICO</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 300</span>
+            <div class="imagen"><img src="img/ataches.png" alt="Ataches"></div>
+            <div class="nombre"><h3>ATACHES</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 50</span>
+            <div class="imagen"><img src="img/perno-dental.png" alt="Pernos Acrílico"></div>
+            <div class="nombre"><h3>PERNOS DIRECTOS DE ACRÍLICO</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 150</span>
+            <div class="imagen"><img src="img/alaia-clinica-dental-Tipos-de-férulas-dentales.jpg" alt="Férula Acrílico"></div>
+            <div class="nombre"><h3>FERULA DE ACRÍLICO</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 50</span>
+            <div class="imagen"><img src="img/FERULA DE ACETATO EN BACKU.jpg" alt="Férula Acetato"></div>
+            <div class="nombre"><h3>FERULA DE ACETATO EN BACKUN</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 90</span>
+            <div class="imagen"><img src="img/CORONAS DE IVOCRON.png" alt="Ivocron"></div>
+            <div class="nombre"><h3>CORONAS DE IVOCRON</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 130</span>
+            <div class="imagen"><img src="img/CORONAS PORCELANA EN VENEER.jpg" alt="Porcelana Veneer"></div>
+            <div class="nombre"><h3>CORONAS PORCELANA EN VENEER</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 80</span>
+            <div class="imagen"><img src="img/JACKETS DE IVOCRON.png" alt="Jackets Ivocron"></div>
+            <div class="nombre"><h3>JACKETS DE IVOCRON</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 110</span>
+            <div class="imagen"><img src="img/corona-de-porcelana.jpg" alt="Porcelana"></div>
+            <div class="nombre"><h3>CORONAS DE PORCELANA</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 60</span>
+            <div class="imagen"><img src="img/CORONAS DE METAL.jpg" alt="Metal"></div>
+            <div class="nombre"><h3>CORONAS DE METAL</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 350</span>
+            <div class="imagen"><img src="img/INCRUSTACIONES DE ZIRCONIO.jpg" alt="Zirconio"></div>
+            <div class="nombre"><h3>INCRUSTACIONES DE ZIRCONIO</h3></div>
+        </div>
+        <div class="cuadro">
+            <span class="precio">S/. 300</span>
+            <div class="imagen"><img src="img/protesis-de-zirconio-sobre-implantes.webp" alt="Implante Zirconio"></div>
+            <div class="nombre"><h3>PROTESIS DE ZIRCONIO SOBRE IMPLANTE</h3></div>
+        </div>
+    </div>
+
+    <footer id="contacto">
+        <p>Laboratorio Dental — Excelencia y Garantía</p>
+        <p><small>Contáctanos para presupuestos personalizados</small></p>
+    </footer>
+
+    <div class="modal-3d" id="modal3D">
+        <div class="modal-3d-content">
+            <button class="modal-3d-close" id="closeModal">✕</button>
+            <img class="modal-3d-image" id="modal3DImage" src="" alt="Zoom">
+            <div id="modal3DInfo" style="margin-top:15px; font-weight:700; color:var(--accent-color);"></div>
+        </div>
+    </div>
+
+    <a href="https://wa.me/51924833466?text=Hola,%20deseo%20información%20sobre%20sus%20servicios%20dentales" class="whatsapp-btn" target="_blank">
+        <svg style="width:32px; height:32px; fill:white;" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-5.5-2.8-23.2-8.5-44.2-27.1-16.4-14.6-27.4-32.7-30.6-38.2-3.2-5.6-.3-8.6 2.4-11.3 2.5-2.4 5.5-6.5 8.3-9.7 2.8-3.3 3.7-5.6 5.5-9.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 13.2 5.8 23.5 9.2 31.5 11.8 13.3 4.2 25.4 3.6 35 2.2 10.7-1.5 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+    </a>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        setInterval(nextSlide, 3000);
+
+        document.addEventListener('DOMContentLoaded', function(){
+            const modal = document.getElementById('modal3D');
+            const modalImage = document.getElementById('modal3DImage');
+            const modalInfo = document.getElementById('modal3DInfo');
+            const closeBtn = document.getElementById('closeModal');
+
+            document.querySelectorAll('.imagen img').forEach(img => {
+                img.addEventListener('click', function(){
+                    const cuadro = this.closest('.cuadro');
+                    modalImage.src = this.src;
+                    modalInfo.textContent = cuadro.querySelector('.nombre h3').textContent + ' — ' + cuadro.querySelector('.precio').textContent;
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            const close = () => { modal.classList.remove('active'); document.body.style.overflow = 'auto'; };
+            closeBtn.addEventListener('click', close);
+            modal.addEventListener('click', (e) => { if(e.target === modal) close(); });
+        });
+    </script>
+</body>
+</html>
